@@ -1,0 +1,8 @@
+node_modules
+build
+dist
+.env
+undefined
+package-lock.json
+.serverless
+coverage

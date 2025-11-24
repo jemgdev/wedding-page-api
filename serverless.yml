@@ -1,0 +1,77 @@
+service: serverless-typescript-template
+frameworkVersion: "4"
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  region: ${opt:region}
+  environment:
+    STAGE: ${opt:stage}
+    REGION: ${opt:region}
+
+package:
+  individually: true
+  patterns:
+    - dist/**
+    - node_modules/**
+    - package.json
+    - '!.github/**'
+    - '!src/**'
+    - '!test/**'
+    - '!.git/**'
+    - '!*.md'
+    - '!.vscode/**'
+    - '!tsconfig.json'
+    - '!jest.config.js'
+    - '!LICENSE'
+
+plugins:
+  - serverless-offline
+
+resources:
+  Resources:
+    GetUsersRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: get-users-role-${opt:stage}
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: lambda.amazonaws.com
+              Action:
+                - sts:AssumeRole
+        Policies:
+          - PolicyName: get-users-policy
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource: "*"
+
+functions:
+  get-users:
+    handler: dist/user/infrastructure/driving/handlers/http/GetUsersHttp.handler
+    role: GetUsersRole
+    timeout: 29
+    memorySize: 128
+    description: Get users from the database
+    events:
+      - http:
+          path: /api/v1/users
+          method: get
+  create-user:
+    handler: dist/user/infrastructure/driving/handlers/http/CreateUserHttp.handler
+    role: GetUsersRole
+    timeout: 29
+    memorySize: 128
+    description: Get users from the database
+    events:
+      - http:
+          path: /api/v1/users
+          method: post
