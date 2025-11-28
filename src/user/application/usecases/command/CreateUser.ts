@@ -1,6 +1,6 @@
 import { ILogger } from '@shared/libraries/logger/ILogger'
-import { User } from '@user/domain/User'
-import { UserPersistanceRepository } from '@user/ports/UserPersistanceRepository'
+import { User } from '@user/domain/Comment'
+import { UserPersistanceRepository } from '@user/application/ports/CommentPersistanceRepository'
 
 export class CreateUser {
   constructor (

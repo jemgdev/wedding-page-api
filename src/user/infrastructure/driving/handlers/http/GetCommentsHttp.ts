@@ -1,22 +1,23 @@
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda'
-import { GetAllUsers } from '@user/application/usecases/query/GetAllUsers'
-import { InMemoryUserRepository } from '@user/infrastructure/driven/InMemoryUserRepository'
+import { GetComments } from '@user/application/usecases/query/GetComments'
+import { CommentDynamoRepository } from '@user/infrastructure/driven/CommentDynamoRepository'
 import { responseMessage } from '@shared/utils/ResponseMessage'
 import { StatusCodes } from '@shared/utils/constants/StatusCodes'
 import { MessageCodes } from '@shared/utils/constants/MessageCodes'
 import { MessageDetail } from '@shared/utils/constants/MessageDetail'
 import { Logger } from '@shared/libraries/logger/Logger'
 import { ILogger } from '@shared/libraries/logger/ILogger'
+import { bodyParser } from '../../../../../shared/utils/TryExtractData'
 
-interface GetUsersHandlerDependencies {
+interface GetCommentsHandlerDependencies {
   logger: ILogger
-  getAllUsersUseCase: GetAllUsers
+  getCommentsUseCase: GetComments
 }
 
-export const buildHandler = ({
+const buildHandler = ({
   logger,
-  getAllUsersUseCase
-}: GetUsersHandlerDependencies) => {
+  getCommentsUseCase
+}: GetCommentsHandlerDependencies) => {
   return async (
     event: APIGatewayProxyEventV2
   ): Promise<APIGatewayProxyResultV2> => {
@@ -25,10 +26,19 @@ export const buildHandler = ({
         event
       })
 
-      // The original code instantiated userRepository and getAllUsers here.
-      // Now they are injected.
-      const users = await getAllUsersUseCase.execute()
-      const finalUsers = users.map(user => user.toPrimitives())
+      const {
+        take,
+        page
+      } = bodyParser<{
+        take: number
+        page: number
+      }>(event)
+
+      const comments = await getCommentsUseCase.execute({
+        take,
+        page
+      })
+      const finalComments = comments.map(comment => comment.toPrimitives())
 
       return responseMessage<{
         code: string
@@ -39,7 +49,7 @@ export const buildHandler = ({
         body: {
           code: MessageCodes.OPERATION_SUCCESSFUL,
           message: MessageDetail.OPERATION_SUCCESSFUL,
-          data: finalUsers
+          data: finalComments
         }
       })
     } catch (err) {
@@ -63,10 +73,10 @@ export const buildHandler = ({
 }
 
 const logger = new Logger()
-const userRepository = new InMemoryUserRepository()
-const getAllUsers = new GetAllUsers(userRepository)
+const commentRepository = new CommentDynamoRepository()
+const getComments = new GetComments(commentRepository)
 
 export const handler = buildHandler({
   logger,
-  getAllUsersUseCase: getAllUsers
+  getCommentsUseCase: getComments
 })
