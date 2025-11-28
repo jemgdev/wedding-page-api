@@ -29,10 +29,12 @@ plugins:
   - serverless-offline
   - serverless-webpack # NUEVO: Plugin de Webpack
 
-custom: # NUEVO: Configuración de Webpack para Serverless
+custom: # FIX: Disable built-in ESBuild to allow serverless-webpack to run.
+  build:
+    esbuild: false
   webpack:
-    webpackConfig: 'webpack.config.js' # Archivo de configuración
-    includeModules: true # Incluye node_modules necesarios
+    webpackConfig: 'webpack.config.js'
+    includeModules: true
     packager: 'npm'
     
 resources:
