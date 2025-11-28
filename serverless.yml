@@ -32,7 +32,8 @@ plugins:
 custom:
   # CONFIGURACIÓN NATIVA DE ESBUILD PARA RESOLVER ALIAS DE TYPESCRIPT
   build:
-    esbuild: true # Habilita ESBuild (o simplemente usa la configuración build)
+    esbuild: true # Habilita ESBuild
+    platform: node # Asegura que el target sea Node.js
     alias:
       '@user': './src/user'    # Mapea alias a la carpeta fuente
       '@shared': './src/shared' # Mapea alias a la carpeta fuente
@@ -42,7 +43,7 @@ custom:
 resources:
   Resources:
     GetCommentsRole:
-      Type: AWS::IAM::Role # CORREGIDO: De AWS::IAM:Role a AWS::IAM::Role
+      Type: AWS::IAM::Role
       Properties:
         RoleName: get-comments-role-${opt:stage}
         AssumeRolePolicyDocument:
@@ -88,8 +89,9 @@ resources:
 
 functions:
   get-comments:
-    # IMPORTANTE: El handler debe apuntar a la ubicación donde ESBuild colocará el código.
-    handler: dist/user/infrastructure/driving/handlers/http/GetCommentsHttp.handler
+    # CORRECCIÓN CRÍTICA: Apunta al archivo fuente original (TS/ESM)
+    # Asegúrate de que este archivo exista en src/
+    handler: src/user/infrastructure/driving/handlers/http/GetCommentsHttp.handler
     role: GetCommentsRole
     timeout: 29
     memorySize: 128
