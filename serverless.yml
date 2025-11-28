@@ -42,7 +42,7 @@ custom:
 resources:
   Resources:
     GetCommentsRole:
-      Type: AWS::IAM:Role
+      Type: AWS::IAM::Role # CORREGIDO: De AWS::IAM:Role a AWS::IAM::Role
       Properties:
         RoleName: get-comments-role-${opt:stage}
         AssumeRolePolicyDocument:
