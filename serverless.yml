@@ -62,13 +62,26 @@ resources:
   CommentsDynamoDBTable:
     Type: AWS::DynamoDB::Table
     Properties:
+      # 1. Nombre de la Tabla
       TableName: wedding-page-api-comments-table-${opt:stage}
+      
+      # 2. DEFINICIÓN DE ATRIBUTOS: (TODOS los atributos usados en KeySchema e Índices)
       AttributeDefinitions:
+        # HASH Key (Identificador del comentario o, mejor aún, del recurso comentado)
         - AttributeName: id
-          AttributeType: S
+          AttributeType: S 
+        # RANGE Key (Necesario para ordenar los comentarios por fecha)
+        - AttributeName: createdAt
+          AttributeType: S # Usamos String (ISO 8601) o N (Number) para la fecha
+          
+      # 3. ESQUEMA DE CLAVE: (Define la Clave Primaria)
       KeySchema:
         - AttributeName: id
-          KeyType: HASH
+          KeyType: HASH # Partition Key (Clave de Partición)
+        - AttributeName: createdAt
+          KeyType: RANGE # Sort Key (Clave de Ordenación)
+          
+      # 4. Modo de Facturación (Correcto, no requiere ProvisionedThroughput)
       BillingMode: PAY_PER_REQUEST
 
 functions:
