@@ -9,10 +9,6 @@ provider:
     STAGE: ${opt:stage}
     REGION: ${opt:region}
 
-plugins:
-  - serverless-offline
-  # ELIMINADO: serverless-webpack
-
 custom:
   # CONFIGURACIÓN NATIVA DE ESBUILD PARA RESOLVER ALIAS DE TYPESCRIPT
   build:
