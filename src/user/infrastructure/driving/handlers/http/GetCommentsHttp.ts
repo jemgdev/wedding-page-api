@@ -28,28 +28,34 @@ const buildHandler = ({
 
       const {
         take,
-        page
+        cursor
       } = queryParser<{
         take: string
-        page: string
+        cursor?: string
       }>(event)
 
-      const comments = await getCommentsUseCase.execute({
+      const commentsResult = await getCommentsUseCase.execute({
         take: Number(take),
-        page: Number(page)
+        cursor: cursor ? cursor : undefined
       })
-      const finalComments = comments.map(comment => comment.toPrimitives())
+      const finalComments = commentsResult.comments.map(comment => comment.toPrimitives())
 
       return responseMessage<{
         code: string
         message: string
-        data: any[]
+        data: {
+          comments: any[]
+          nextCursor?: string
+        }
       }>({
         statusCode: StatusCodes.OPERATION_SUCCESSFUL,
         body: {
           code: MessageCodes.OPERATION_SUCCESSFUL,
           message: MessageDetail.OPERATION_SUCCESSFUL,
-          data: finalComments
+          data: {
+            comments: finalComments,
+            nextCursor: commentsResult.nextCursor
+          }
         }
       })
     } catch (err) {

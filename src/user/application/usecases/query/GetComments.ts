@@ -6,12 +6,12 @@ export class GetComments {
 
   async execute ({
     take,
-    page
+    cursor
   }: {
     take: number
-    page: number
-  }): Promise<Comment[]> {
-    const comments = await this.commentRepository.findAll(take, page)
+    cursor?: string
+  }): Promise<{ comments: Comment[], nextCursor?: string }> {
+    const comments = await this.commentRepository.findAll(take, cursor)
     return comments
   }
 }
