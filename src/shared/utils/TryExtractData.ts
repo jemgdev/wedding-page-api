@@ -5,6 +5,18 @@ import { APIGatewayProxyEventV2, SQSEvent } from 'aws-lambda'
  * @param {APIGatewayProxyEventV2} event - The API Gateway event containing the request details.
  * @returns {T} The headers as an object.
  */
+export function pathParser<T> (event: APIGatewayProxyEventV2): T {
+  return event.queryStringParameters !== undefined && event.queryStringParameters !== null
+    ? (event.queryStringParameters as T)
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    : ({} as T)
+}
+
+/**
+ * Extracts query from an AWS API Gateway event.
+ * @param {APIGatewayProxyEventV2} event - The API Gateway event containing the request details.
+ * @returns {T} The query as an object.
+ */
 export function queryParser<T> (event: APIGatewayProxyEventV2): T {
   return event.queryStringParameters !== undefined && event.queryStringParameters !== null
     ? (event.queryStringParameters as T)

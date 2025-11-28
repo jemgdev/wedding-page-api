@@ -7,7 +7,7 @@ import { MessageCodes } from '@shared/utils/constants/MessageCodes'
 import { MessageDetail } from '@shared/utils/constants/MessageDetail'
 import { Logger } from '@shared/libraries/logger/Logger'
 import { ILogger } from '@shared/libraries/logger/ILogger'
-import { bodyParser } from '../../../../../shared/utils/TryExtractData'
+import { queryParser } from '../../../../../shared/utils/TryExtractData'
 
 interface GetCommentsHandlerDependencies {
   logger: ILogger
@@ -29,14 +29,14 @@ const buildHandler = ({
       const {
         take,
         page
-      } = bodyParser<{
-        take: number
-        page: number
+      } = queryParser<{
+        take: string
+        page: string
       }>(event)
 
       const comments = await getCommentsUseCase.execute({
-        take,
-        page
+        take: Number(take),
+        page: Number(page)
       })
       const finalComments = comments.map(comment => comment.toPrimitives())
 
