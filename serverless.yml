@@ -9,22 +9,6 @@ provider:
     STAGE: ${opt:stage}
     REGION: ${opt:region}
 
-package:
-  individually: false
-  patterns:
-    - dist/**
-    - node_modules/**
-    - package.json
-    - '!.github/**'
-    - '!src/**'
-    - '!test/**'
-    - '!.git/**'
-    - '!*.md'
-    - '!.vscode/**'
-    - '!tsconfig.json'
-    - '!jest.config.js'
-    - '!LICENSE'
-
 plugins:
   - serverless-offline
   # ELIMINADO: serverless-webpack
