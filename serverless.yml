@@ -27,23 +27,22 @@ package:
 
 plugins:
   - serverless-offline
-  - serverless-webpack
+  # ELIMINADO: serverless-webpack
 
 custom:
-  # PROPIEDAD DE CONFLICTO: Debe estar en el nivel superior de 'custom'
+  # CONFIGURACIÓN NATIVA DE ESBUILD PARA RESOLVER ALIAS DE TYPESCRIPT
   build:
-    esbuild: false # Esto deshabilita el bundler nativo de Serverless v4
-
-  # Configuración del plugin serverless-webpack
-  webpack:
-    webpackConfig: 'webpack.config.js'
-    includeModules: true
-    packager: 'npm'
+    esbuild: true # Habilita ESBuild (o simplemente usa la configuración build)
+    alias:
+      '@user': './src/user'    # Mapea alias a la carpeta fuente
+      '@shared': './src/shared' # Mapea alias a la carpeta fuente
+    
+  # ELIMINADO: webpack: ...
     
 resources:
   Resources:
     GetCommentsRole:
-      Type: AWS::IAM::Role
+      Type: AWS::IAM:Role
       Properties:
         RoleName: get-comments-role-${opt:stage}
         AssumeRolePolicyDocument:
@@ -89,6 +88,7 @@ resources:
 
 functions:
   get-comments:
+    # IMPORTANTE: El handler debe apuntar a la ubicación donde ESBuild colocará el código.
     handler: dist/user/infrastructure/driving/handlers/http/GetCommentsHttp.handler
     role: GetCommentsRole
     timeout: 29
