@@ -57,7 +57,7 @@ resources:
                   Action:
                     - dynamodb:Query
                   Resource:
-                    - arn:aws:dynamodb:${opt:region}:*:table/wedding-page-api-comments-table-${opt:stage}
+                    - !GetAtt CommentsDynamoDBTable.Arn
 
   CommentsDynamoDBTable:
     Type: AWS::DynamoDB::Table
