@@ -35,6 +35,8 @@ export class CommentDynamoRepository implements CommentPersistanceRepository {
         ExclusiveStartKey: page > 0 ? { id: { S: (page * take).toString() } } : undefined
       }
 
+      console.log('Query Command:', command)
+
       const result = await this.dynamoClient.send(new QueryCommand(command))
 
       if (!result.Items) {
