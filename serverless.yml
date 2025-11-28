@@ -10,7 +10,7 @@ provider:
     REGION: ${opt:region}
 
 package:
-  individually: false # Se mantiene false, pero Webpack podría manejar esto.
+  individually: false
   patterns:
     - dist/**
     - node_modules/**
@@ -27,11 +27,14 @@ package:
 
 plugins:
   - serverless-offline
-  - serverless-webpack # NUEVO: Plugin de Webpack
+  - serverless-webpack
 
-custom: # FIX: Disable built-in ESBuild to allow serverless-webpack to run.
+custom:
+  # PROPIEDAD DE CONFLICTO: Debe estar en el nivel superior de 'custom'
   build:
-    esbuild: false
+    esbuild: false # Esto deshabilita el bundler nativo de Serverless v4
+
+  # Configuración del plugin serverless-webpack
   webpack:
     webpackConfig: 'webpack.config.js'
     includeModules: true
@@ -66,8 +69,6 @@ resources:
                   Action:
                     - dynamodb:Query
                   Resource:
-                    # CORRECCIÓN: Usamos !GetAtt para referenciar el ARN de la tabla.
-                    # Esto garantiza que el ARN se construye correctamente en tiempo de despliegue.
                     - !GetAtt CommentsDynamoDBTable.Arn
 
     CommentsDynamoDBTable:
