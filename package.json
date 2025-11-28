@@ -27,12 +27,16 @@
     "eslint": "9.33.0",
     "jest": "30.0.5",
     "serverless-offline": "14.4.0",
+    "serverless-webpack": "^5.15.3",
     "ts-jest": "29.4.1",
+    "ts-loader": "^9.5.4",
     "ts-node": "10.9.2",
     "ts-standard": "12.0.2",
     "tsc-alias": "1.8.16",
     "typescript": "5.9.2",
-    "typescript-eslint": "8.40.0"
+    "typescript-eslint": "8.40.0",
+    "webpack": "^5.103.0",
+    "webpack-node-externals": "^3.0.0"
   },
   "ts-standard": {
     "project": "./tsconfig.json",

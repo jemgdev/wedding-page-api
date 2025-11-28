@@ -10,7 +10,7 @@ provider:
     REGION: ${opt:region}
 
 package:
-  individually: true
+  individually: false # Se mantiene false, pero Webpack podría manejar esto.
   patterns:
     - dist/**
     - node_modules/**
@@ -27,7 +27,14 @@ package:
 
 plugins:
   - serverless-offline
+  - serverless-webpack # NUEVO: Plugin de Webpack
 
+custom: # NUEVO: Configuración de Webpack para Serverless
+  webpack:
+    webpackConfig: 'webpack.config.js' # Archivo de configuración
+    includeModules: true # Incluye node_modules necesarios
+    packager: 'npm'
+    
 resources:
   Resources:
     GetCommentsRole:
