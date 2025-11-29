@@ -50,6 +50,64 @@ resources:
                     - dynamodb:Scan
                   Resource:
                     - !GetAtt CommentsDynamoDBTable.Arn
+    
+    GetCommentsRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: get-comments-role-${opt:stage}
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: lambda.amazonaws.com
+              Action:
+                - sts:AssumeRole
+        Policies:
+          - PolicyName: get-comments-policy
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource: "*"
+                - Effect: Allow
+                  Action:
+                    - dynamodb:Scan
+                  Resource:
+                    - !GetAtt CommentsDynamoDBTable.Arn
+
+    CreateCommentRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: create-comment-role-${opt:stage}
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: lambda.amazonaws.com
+              Action:
+                - sts:AssumeRole
+        Policies:
+          - PolicyName: create-comment-policy
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource: "*"
+                - Effect: Allow
+                  Action:
+                    - dynamodb:PutItem
+                  Resource:
+                    - !GetAtt CommentsDynamoDBTable.Arn
 
     CommentsDynamoDBTable:
       Type: AWS::DynamoDB::Table
@@ -84,3 +142,20 @@ functions:
       - http:
           path: /api/v1/comments
           method: get
+  
+  create-comment:
+    # CORRECCIÓN CRÍTICA: Apunta al archivo fuente original (TS/ESM)
+    # Asegúrate de que este archivo exista en src/
+    handler: src/user/infrastructure/driving/handlers/http/CreateCommentHttp.handler
+    role: CreateCommentRole
+    timeout: 29
+    memorySize: 128
+    description: Create comments in the database
+    environment:
+      STAGE: ${opt:stage}
+      REGION: ${opt:region}
+      COMMENTS_TABLE_NAME: wedding-page-api-comments-table-${opt:stage}
+    events:
+      - http:
+          path: /api/v1/comments
+          method: post
