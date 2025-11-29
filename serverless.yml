@@ -50,35 +50,6 @@ resources:
                     - dynamodb:Scan
                   Resource:
                     - !GetAtt CommentsDynamoDBTable.Arn
-    
-    GetCommentsRole:
-      Type: AWS::IAM::Role
-      Properties:
-        RoleName: get-comments-role-${opt:stage}
-        AssumeRolePolicyDocument:
-          Version: "2012-10-17"
-          Statement:
-            - Effect: Allow
-              Principal:
-                Service: lambda.amazonaws.com
-              Action:
-                - sts:AssumeRole
-        Policies:
-          - PolicyName: get-comments-policy
-            PolicyDocument:
-              Version: "2012-10-17"
-              Statement:
-                - Effect: Allow
-                  Action:
-                    - logs:CreateLogGroup
-                    - logs:CreateLogStream
-                    - logs:PutLogEvents
-                  Resource: "*"
-                - Effect: Allow
-                  Action:
-                    - dynamodb:Scan
-                  Resource:
-                    - !GetAtt CommentsDynamoDBTable.Arn
 
     CreateCommentRole:
       Type: AWS::IAM::Role
