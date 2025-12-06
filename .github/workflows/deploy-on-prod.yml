@@ -34,4 +34,7 @@ jobs:
         run: |
           serverless deploy --verbose \
             --stage ${{ secrets.STAGE }} \
-            --region ${{ secrets.REGION }}
+            --region ${{ secrets.REGION }} \
+            --logifly-base-url ${{ secrets.LOGIFLY_BASE_URL }} \
+            --logifly-email ${{ secrets.LOGIFLY_EMAIL }} \
+            --logifly-password ${{ secrets.LOGIFLY_PASSWORD }}

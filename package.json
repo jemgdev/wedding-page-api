@@ -15,8 +15,9 @@
   "license": "MIT",
   "description": "A serverless typescript template",
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.940.0",
-    "@aws-sdk/lib-dynamodb": "^3.940.0",
+    "@aws-sdk/client-dynamodb": "3.940.0",
+    "@aws-sdk/lib-dynamodb": "3.940.0",
+    "axios": "1.13.2",
     "loggerfy": "1.1.4",
     "zod": "4.0.17"
   },
@@ -27,7 +28,7 @@
     "eslint": "9.33.0",
     "jest": "30.0.5",
     "ts-jest": "29.4.1",
-    "ts-loader": "^9.5.4",
+    "ts-loader": "9.5.4",
     "ts-node": "10.9.2",
     "ts-standard": "12.0.2",
     "tsc-alias": "1.8.16",
