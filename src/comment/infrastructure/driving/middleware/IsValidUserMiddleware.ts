@@ -93,7 +93,7 @@ export const isValidUserMiddleware = (handler: Function) => {
           statusCode: StatusCodes.UNAUTHORIZED,
           body: {
             code: MessageCodes.UNAUTHORIZED,
-            message: MessageCodes.UNAUTHORIZED
+            message: MessageDetail.UNAUTHORIZED
           }
         })
       }

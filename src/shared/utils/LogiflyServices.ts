@@ -113,7 +113,7 @@ export const logiflyVerifyUser = async ({
       roles: [
         'user'
       ],
-      app: 'Mi Dulce Tesoro'
+      app: 'WeddingPage'
     }, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
