@@ -7,7 +7,8 @@ import { MessageCodes } from '@shared/utils/constants/MessageCodes'
 import { MessageDetail } from '@shared/utils/constants/MessageDetail'
 import { Logger } from '@shared/libraries/logger/Logger'
 import { ILogger } from '@shared/libraries/logger/ILogger'
-import { queryParser } from '../../../../../shared/utils/TryExtractData'
+import { queryParser } from '@shared/utils/TryExtractData'
+import { isValidUserMiddleware } from '@comment/infrastructure/driving/middleware/IsValidUserMiddleware'
 
 interface GetCommentsHandlerDependencies {
   logger: ILogger
@@ -82,7 +83,7 @@ const logger = new Logger()
 const commentRepository = new CommentDynamoRepository()
 const getComments = new GetComments(commentRepository)
 
-export const handler = buildHandler({
+export const handler = isValidUserMiddleware(buildHandler({
   logger,
   getCommentsUseCase: getComments
-})
+}))
