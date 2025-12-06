@@ -109,9 +109,9 @@ functions:
       STAGE: ${opt:stage}
       REGION: ${opt:region}
       COMMENTS_TABLE_NAME: wedding-page-api-comments-table-${opt:stage}
-      LOGIFLY_BASE_URL: ${param:logifly-base-url}
-      LOGIFLY_EMAIL: ${param:logifly-email}
-      LOGIFLY_PASSWORD: ${param:logifly-password}
+      LOGIFLY_BASE_URL: ${param:logifly_base_url}
+      LOGIFLY_EMAIL: ${param:logifly_email}
+      LOGIFLY_PASSWORD: ${param:logifly_password}
     events:
       - http:
           path: /api/v1/comments

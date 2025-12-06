@@ -35,6 +35,6 @@ jobs:
           serverless deploy --verbose \
             --stage ${{ secrets.STAGE }} \
             --region ${{ secrets.REGION }} \
-            --param="logifly-base-url=${{ secrets.LOGIFLY_BASE_URL }}" \
-            --param="logifly-email=${{ secrets.LOGIFLY_EMAIL }}" \
-            --param="logifly-password=${{ secrets.LOGIFLY_PASSWORD }}"
+            --param="logifly_base_url=${{ secrets.LOGIFLY_BASE_URL }}" \
+            --param="logifly_email=${{ secrets.LOGIFLY_EMAIL }}" \
+            --param="logifly_password=${{ secrets.LOGIFLY_PASSWORD }}"
