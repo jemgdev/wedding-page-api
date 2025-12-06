@@ -7,10 +7,6 @@ import https from 'https'
 
 const logger = new Loggerfy()
 
-const agent = new https.Agent({
-  family: 6
-})
-
 export const logiflyOwnerLogin = async (): Promise<{
   accessToken: string
   idToken: string
@@ -20,8 +16,6 @@ export const logiflyOwnerLogin = async (): Promise<{
     const response = await axios.post(`${Environments.LOGIFLY_BASE_URL}/api/v1/owners/signin`, {
       email: Environments.LOGIFLY_EMAIL,
       password: Environments.LOGIFLY_PASSWORD
-    }, {
-      httpsAgent: agent
     })
 
     const statusCode = response.status
@@ -76,8 +70,7 @@ export const logiflyLogin = async ({
       headers: {
         Authorization: `Bearer ${ownerAccessToken}`,
         'id-token': ownerIdToken
-      },
-      httpsAgent: agent
+      }
     })
 
     const statusCode = response.status
@@ -125,8 +118,7 @@ export const logiflyVerifyUser = async ({
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'id-token': idToken
-      },
-      httpsAgent: agent
+      }
     })
 
     logger
