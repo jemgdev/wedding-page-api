@@ -1,5 +1,5 @@
-import { Comment } from '@user/domain/Comment'
-import { CommentPersistanceRepository } from '@user/application/ports/CommentPersistanceRepository'
+import { Comment } from '@comment/domain/Comment'
+import { CommentPersistanceRepository } from '@comment/application/ports/CommentPersistanceRepository'
 
 export class GetComments {
   constructor (private readonly commentRepository: CommentPersistanceRepository) {}

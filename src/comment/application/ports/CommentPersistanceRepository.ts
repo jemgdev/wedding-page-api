@@ -1,4 +1,4 @@
-import { Comment } from '@user/domain/Comment'
+import { Comment } from '@comment/domain/Comment'
 
 export interface CommentPersistanceRepository {
   save: (comment: Comment) => Promise<void>

@@ -1,4 +1,4 @@
-import { CommentPersistanceRepository } from '@user/application/ports/CommentPersistanceRepository'
+import { CommentPersistanceRepository } from '@comment/application/ports/CommentPersistanceRepository'
 import { InfrastructureError } from '@shared/errors/InfrastructureError'
 import { CommentPersistanceMapper } from './mappers/CommentPersistanceMapper'
 import { DynamoClient } from '@shared/libraries/dynamodb/DynamoClient'

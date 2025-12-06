@@ -1,4 +1,4 @@
-import { ID } from '@user/value-objects/ID'
+import { ID } from '@comment/value-objects/ID'
 
 export class Comment {
   private constructor (

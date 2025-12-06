@@ -1,5 +1,5 @@
-import { Comment } from '@user/domain/Comment'
-import { ICommentPersistance } from '@user/infrastructure/driven/dtos/ICommentPersistance'
+import { Comment } from '@comment/domain/Comment'
+import { ICommentPersistance } from '@comment/infrastructure/driven/dtos/ICommentPersistance'
 
 export class CommentPersistanceMapper {
   static toDomain (raw: ICommentPersistance): Comment {

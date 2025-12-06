@@ -1,44 +1,61 @@
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda'
-import { SaveComments } from '@user/application/usecases/command/SaveComment'
-import { CommentDynamoRepository } from '@user/infrastructure/driven/CommentDynamoRepository'
+import { GetComments } from '@comment/application/usecases/query/GetComments'
+import { CommentDynamoRepository } from '@comment/infrastructure/driven/CommentDynamoRepository'
 import { responseMessage } from '@shared/utils/ResponseMessage'
 import { StatusCodes } from '@shared/utils/constants/StatusCodes'
 import { MessageCodes } from '@shared/utils/constants/MessageCodes'
 import { MessageDetail } from '@shared/utils/constants/MessageDetail'
 import { Logger } from '@shared/libraries/logger/Logger'
 import { ILogger } from '@shared/libraries/logger/ILogger'
-import { bodyParser, queryParser } from '../../../../../shared/utils/TryExtractData'
-import { ICreateCommentHttpRequest } from '../../dtos/ICreateCommentHttpRequest'
+import { queryParser } from '../../../../../shared/utils/TryExtractData'
 
-interface CreateCommentHandlerDependencies {
+interface GetCommentsHandlerDependencies {
   logger: ILogger
-  saveCommentsUseCase: SaveComments
+  getCommentsUseCase: GetComments
 }
 
 const buildHandler = ({
   logger,
-  saveCommentsUseCase
-}: CreateCommentHandlerDependencies) => {
+  getCommentsUseCase
+}: GetCommentsHandlerDependencies) => {
   return async (
     event: APIGatewayProxyEventV2
   ): Promise<APIGatewayProxyResultV2> => {
     try {
-      logger.info('Http event data', 'GET_USERS', 'Http event data', {
+      logger.info('Http event data', 'GET_commentS', 'Http event data', {
         event
       })
 
-      const request = bodyParser<ICreateCommentHttpRequest>(event)
+      const {
+        take,
+        cursor
+      } = queryParser<{
+        take: string
+        cursor?: string
+      }>(event)
 
-      await saveCommentsUseCase.execute(request)
+      const commentsResult = await getCommentsUseCase.execute({
+        take: Number(take),
+        cursor: cursor ? cursor : undefined
+      })
+      const finalComments = commentsResult.comments.map(comment => comment.toPrimitives())
 
       return responseMessage<{
         code: string
         message: string
+        data: {
+          comments: any[]
+          nextCursor?: string
+        }
       }>({
         statusCode: StatusCodes.OPERATION_SUCCESSFUL,
         body: {
           code: MessageCodes.OPERATION_SUCCESSFUL,
-          message: MessageDetail.OPERATION_SUCCESSFUL
+          message: MessageDetail.OPERATION_SUCCESSFUL,
+          data: {
+            comments: finalComments,
+            nextCursor: commentsResult.nextCursor
+          }
         }
       })
     } catch (err) {
@@ -63,9 +80,9 @@ const buildHandler = ({
 
 const logger = new Logger()
 const commentRepository = new CommentDynamoRepository()
-const saveComments = new SaveComments(commentRepository)
+const getComments = new GetComments(commentRepository)
 
 export const handler = buildHandler({
   logger,
-  saveCommentsUseCase: saveComments
+  getCommentsUseCase: getComments
 })

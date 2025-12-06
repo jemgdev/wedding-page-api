@@ -19,16 +19,16 @@ module.exports = {
   verbose: true,
   cache: false,
   moduleNameMapper: {
-    // User paths
-    '^@user/value-objects/(.*)$': '<rootDir>/src/user/domain/value-objects/$1',
-    '^@user/domain/(.*)$': '<rootDir>/src/user/domain/$1',
-    '^@user/application/(.*)$': '<rootDir>/src/user/application/$1',
-    '^@user/usecases/(.*)$': '<rootDir>/src/user/application/usecases/$1',
-    '^@user/ports/(.*)$': '<rootDir>/src/user/application/ports/$1',
-    '^@user/infrastructure/(.*)$': '<rootDir>/src/user/infrastructure/$1',
-    '^@user/driven/(.*)$': '<rootDir>/src/user/infrastructure/driven/$1',
-    '^@user/driving/(.*)$': '<rootDir>/src/user/infrastructure/driving/$1',
-    '^@user/(.*)$': '<rootDir>/src/user/$1',
+    // Comment paths
+    '^@comment/value-objects/(.*)$': '<rootDir>/src/comment/domain/value-objects/$1',
+    '^@comment/domain/(.*)$': '<rootDir>/src/comment/domain/$1',
+    '^@comment/application/(.*)$': '<rootDir>/src/comment/application/$1',
+    '^@comment/usecases/(.*)$': '<rootDir>/src/comment/application/usecases/$1',
+    '^@comment/ports/(.*)$': '<rootDir>/src/comment/application/ports/$1',
+    '^@comment/infrastructure/(.*)$': '<rootDir>/src/comment/infrastructure/$1',
+    '^@comment/driven/(.*)$': '<rootDir>/src/comment/infrastructure/driven/$1',
+    '^@comment/driving/(.*)$': '<rootDir>/src/comment/infrastructure/driving/$1',
+    '^@comment/(.*)$': '<rootDir>/src/comment/$1',
 
     // Shared paths
     '^@shared/(.*)$': '<rootDir>/src/shared/$1'

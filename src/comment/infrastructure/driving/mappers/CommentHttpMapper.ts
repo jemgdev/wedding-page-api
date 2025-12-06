@@ -1,6 +1,6 @@
-import { Comment } from '@user/domain/Comment'
-import { ICreateCommentHttpRequest } from '@user/infrastructure/driving/dtos/ICreateCommentHttpRequest'
-import { ICreateCommentHttpResponse } from '@user/infrastructure/driving/dtos/ICreateCommentHttpResponse'
+import { Comment } from '@comment/domain/Comment'
+import { ICreateCommentHttpRequest } from '@comment/infrastructure/driving/dtos/ICreateCommentHttpRequest'
+import { ICreateCommentHttpResponse } from '@comment/infrastructure/driving/dtos/ICreateCommentHttpResponse'
 
 export class CommentHttpMapper {
   static fromRequest (dto: ICreateCommentHttpRequest): Comment {
