@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "ignoreDeprecations": "6.0",
     "isolatedModules": true,
     "types": ["jest", "node"],
     "allowSyntheticDefaultImports": true,
