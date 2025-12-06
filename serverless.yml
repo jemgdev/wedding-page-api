@@ -100,7 +100,7 @@ functions:
   get-comments:
     # CORRECCIÓN CRÍTICA: Apunta al archivo fuente original (TS/ESM)
     # Asegúrate de que este archivo exista en src/
-    handler: src/user/infrastructure/driving/handlers/http/GetCommentsHttp.handler
+    handler: src/comment/infrastructure/driving/handlers/http/GetCommentsHttp.handler
     role: GetCommentsRole
     timeout: 29
     memorySize: 128
@@ -117,7 +117,7 @@ functions:
   create-comment:
     # CORRECCIÓN CRÍTICA: Apunta al archivo fuente original (TS/ESM)
     # Asegúrate de que este archivo exista en src/
-    handler: src/user/infrastructure/driving/handlers/http/CreateCommentHttp.handler
+    handler: src/comment/infrastructure/driving/handlers/http/CreateCommentHttp.handler
     role: CreateCommentRole
     timeout: 29
     memorySize: 128
