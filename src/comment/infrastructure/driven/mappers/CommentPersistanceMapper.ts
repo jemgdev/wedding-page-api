@@ -8,8 +8,7 @@ export class CommentPersistanceMapper {
       name: raw.name,
       presence: raw.presence,
       comment: raw.comment,
-      createdAt: raw.createdAt,
-      likeCount: raw.likeCount
+      createdAt: raw.createdAt
     })
   }
 
@@ -20,8 +19,7 @@ export class CommentPersistanceMapper {
       name: p.name,
       presence: p.presence,
       comment: p.comment,
-      createdAt: p.createdAt,
-      likeCount: p.likeCount
+      createdAt: p.createdAt
     }
   }
 }

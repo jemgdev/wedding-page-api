@@ -4,5 +4,4 @@ export interface ICommentPersistance {
   presence: boolean
   comment: string
   createdAt: string
-  likeCount: number
 }

@@ -6,8 +6,7 @@ export class Comment {
     private readonly name: string,
     private readonly presence: boolean,
     private readonly comment: string,
-    private readonly createdAt: string,
-    private readonly likeCount: number
+    private readonly createdAt: string
   ) {}
 
   public static create (props: {
@@ -23,8 +22,7 @@ export class Comment {
       props.name,
       props.presence,
       props.comment,
-      createdAt,
-      0
+      createdAt
     )
   }
 
@@ -34,15 +32,13 @@ export class Comment {
     presence: boolean
     comment: string
     createdAt: string
-    likeCount: number
   }): Comment {
     return new Comment(
       ID.fromString(props.id),
       props.name,
       props.presence,
       props.comment,
-      props.createdAt,
-      props.likeCount
+      props.createdAt
     )
   }
 
@@ -52,15 +48,13 @@ export class Comment {
     presence: boolean
     comment: string
     createdAt: string
-    likeCount: number
   } {
     return {
       id: this.id.getValue(),
       name: this.name,
       presence: this.presence,
       comment: this.comment,
-      createdAt: this.createdAt,
-      likeCount: this.likeCount
+      createdAt: this.createdAt
     }
   }
 }
