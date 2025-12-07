@@ -35,10 +35,10 @@ const buildHandler = ({
         code: string
         message: string
       }>({
-        statusCode: StatusCodes.OPERATION_SUCCESSFUL,
+        statusCode: StatusCodes.RESOURCE_CREATED,
         body: {
-          code: MessageCodes.OPERATION_SUCCESSFUL,
-          message: MessageDetail.OPERATION_SUCCESSFUL
+          code: MessageCodes.RESOURCE_CREATED,
+          message: MessageDetail.CONFIRMATION_SEND
         }
       })
     } catch (err) {

@@ -4,5 +4,6 @@ export const MessageDetail = {
   UNCONTROLLER_ERROR: 'Uncontroller error',
   SERVICE_UNAVAILABLE: 'Service unavailable',
   PROCESS_ERROR: 'Process error',
-  UNAUTHORIZED: 'Unauthorized'
+  UNAUTHORIZED: 'Unauthorized',
+  CONFIRMATION_SEND: 'Confirmation has been sent successfully',
 }
