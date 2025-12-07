@@ -65,7 +65,7 @@ export const logiflyLogin = async ({
     const response = await axios.post(`${Environments.LOGIFLY_BASE_URL}/api/v1/signin`, {
         email,
         password,
-        app: 'Mi Dulce Tesoro'
+        app: 'WeddingPage'
       }, {
       headers: {
         Authorization: `Bearer ${ownerAccessToken}`,
