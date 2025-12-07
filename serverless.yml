@@ -10,16 +10,13 @@ provider:
     REGION: ${opt:region}
 
 custom:
-  # CONFIGURACIÓN NATIVA DE ESBUILD PARA RESOLVER ALIAS DE TYPESCRIPT
   build:
-    esbuild: true # Habilita ESBuild
-    platform: node # Asegura que el target sea Node.js
+    esbuild: true
+    platform: node
     alias:
-      '@comment': './src/comment'    # Mapea alias a la carpeta fuente
-      '@shared': './src/shared' # Mapea alias a la carpeta fuente
-    
-  # ELIMINADO: webpack: ...
-    
+      '@comment': './src/comment'
+      '@shared': './src/shared'
+
 resources:
   Resources:
     GetCommentsRole:
@@ -122,8 +119,6 @@ resources:
 
 functions:
   get-comments:
-    # CORRECCIÓN CRÍTICA: Apunta al archivo fuente original (TS/ESM)
-    # Asegúrate de que este archivo exista en src/
     handler: src/comment/infrastructure/driving/handlers/http/GetCommentsHttp.handler
     role: GetCommentsRole
     timeout: 29
@@ -140,10 +135,9 @@ functions:
       - http:
           path: /api/v1/comments
           method: get
-  
+          cors: true # <--- HABILITADO
+
   create-comment:
-    # CORRECCIÓN CRÍTICA: Apunta al archivo fuente original (TS/ESM)
-    # Asegúrate de que este archivo exista en src/
     handler: src/comment/infrastructure/driving/handlers/http/CreateCommentHttp.handler
     role: CreateCommentRole
     timeout: 29
@@ -157,10 +151,9 @@ functions:
       - http:
           path: /api/v1/comments
           method: post
+          cors: true # <--- HABILITADO
   
   signin:
-    # CORRECCIÓN CRÍTICA: Apunta al archivo fuente original (TS/ESM)
-    # Asegúrate de que este archivo exista en src/
     handler: src/comment/infrastructure/driving/handlers/http/SignInHttp.handler
     role: SignInRole
     timeout: 29
@@ -177,3 +170,4 @@ functions:
       - http:
           path: /api/v1/signin
           method: post
+          cors: true # <--- HABILITADO
