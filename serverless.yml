@@ -44,7 +44,7 @@ resources:
                   Resource: "*"
                 - Effect: Allow
                   Action:
-                    - dynamodb:Scan
+                    - dynamodb:Query
                   Resource:
                     - !GetAtt CommentsDynamoDBTable.Arn
 

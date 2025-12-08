@@ -4,7 +4,7 @@ import { CommentPersistanceMapper } from './mappers/CommentPersistanceMapper'
 import { DynamoClient } from '@shared/libraries/dynamodb/DynamoClient'
 import { Comment } from '../../domain/Comment'
 // FIX: Usamos ScanCommand para la funcionalidad de escaneo de toda la tabla
-import { PutCommand, ScanCommand, ScanCommandInput } from '@aws-sdk/lib-dynamodb' 
+import { PutCommand, QueryCommandInput, ScanCommand } from '@aws-sdk/lib-dynamodb' 
 // REMOVIDO: Se eliminan las importaciones de QueryCommand al cambiar a Scan
 
 export class CommentDynamoRepository implements CommentPersistanceRepository {
@@ -35,10 +35,11 @@ export class CommentDynamoRepository implements CommentPersistanceRepository {
       const ExclusiveStartKey = cursor ? JSON.parse(Buffer.from(cursor, 'base64').toString('utf8')) : undefined;
 
       // CAMBIO: Usamos ScanCommandInput. KeyConditionExpression no es requerida para Scan.
-      const command: ScanCommandInput = {
+      const command: QueryCommandInput = {
         TableName: process.env.COMMENTS_TABLE_NAME!,
         Limit: take,
-        ExclusiveStartKey: ExclusiveStartKey
+        ExclusiveStartKey: ExclusiveStartKey,
+        ScanIndexForward: false,
       }
 
       console.log('Scan Command:', command)
