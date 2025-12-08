@@ -48,7 +48,7 @@ export class CommentDynamoRepository implements CommentPersistanceRepository {
         '#type': 'type' // Usamos alias porque 'type' es palabra reservada en DynamoDB
       },
       ExpressionAttributeValues: {
-        ':typeVal': { S: 'COMMENT' }
+        ':typeVal': 'COMMENT'
       },
 
       // D. Ordenamiento: false = Descendente (Más nuevo -> Más viejo)
