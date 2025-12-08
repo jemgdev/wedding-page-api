@@ -47,6 +47,7 @@ resources:
                     - dynamodb:Query
                   Resource:
                     - !GetAtt CommentsDynamoDBTable.Arn
+                    - !GetAtt CommentsDynamoDBTable.Arn/*
 
     CreateCommentRole:
       Type: AWS::IAM::Role
