@@ -47,7 +47,7 @@ resources:
                     - dynamodb:Query
                   Resource:
                     - !GetAtt CommentsDynamoDBTable.Arn
-                    - !GetAtt CommentsDynamoDBTable.Arn/*
+                    - !Sub "${CommentsDynamoDBTable.Arn}/index/CommentsByDateIndex"
 
     CreateCommentRole:
       Type: AWS::IAM::Role
