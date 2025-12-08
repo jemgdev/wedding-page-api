@@ -24,11 +24,11 @@ export const isValidUserMiddleware = (handler: Function) => {
 
       const headers = headerParser<{
         Authorization: string,
-        'Id-Token': string
+        'id-token': string
       }>(event)
 
       const authorization = headers.Authorization
-      const idToken = headers['Id-Token']
+      const idToken = headers['id-token']
 
       if (!authorization.startsWith('Bearer ')) {
         return responseMessage<{
