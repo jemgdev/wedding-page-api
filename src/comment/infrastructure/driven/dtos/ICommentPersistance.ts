@@ -4,4 +4,5 @@ export interface ICommentPersistance {
   presence: boolean
   comment: string
   createdAt: string
+  type: 'COMMENT'
 }

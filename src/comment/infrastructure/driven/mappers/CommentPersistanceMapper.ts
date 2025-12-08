@@ -19,7 +19,8 @@ export class CommentPersistanceMapper {
       name: p.name,
       presence: p.presence,
       comment: p.comment,
-      createdAt: p.createdAt
+      createdAt: p.createdAt,
+      type: 'COMMENT'
     }
   }
 }

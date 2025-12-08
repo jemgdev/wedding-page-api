@@ -110,11 +110,23 @@ resources:
             AttributeType: S 
           - AttributeName: createdAt
             AttributeType: S
+          - AttributeName: type # <--- 1. NUEVO ATRIBUTO (La clave de agrupación)
+            AttributeType: S
         KeySchema:
           - AttributeName: id
             KeyType: HASH
           - AttributeName: createdAt
             KeyType: RANGE
+        # 2. AGREGAMOS EL ÍNDICE
+        GlobalSecondaryIndexes:
+          - IndexName: CommentsByDateIndex # Nombre del índice
+            KeySchema:
+              - AttributeName: type # HASH (Todos los comentarios tendrán el mismo valor aquí)
+                KeyType: HASH
+              - AttributeName: createdAt # RANGE (Esto permite el ordenamiento)
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL # Copia todos los datos al índice
         BillingMode: PAY_PER_REQUEST
 
 functions:

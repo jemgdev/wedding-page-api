@@ -28,43 +28,58 @@ export class CommentDynamoRepository implements CommentPersistanceRepository {
     }
   }
 
-  // CAMBIO CRÍTICO: Implementación ahora realiza un Scan, ideal para obtener 'todo' con paginación basada en cursor.
-  // La firma se simplifica ya que no requiere el entityId (HASH Key).
   async findAll(take: number, cursor?: string): Promise<{ comments: Comment[], nextCursor?: string }> {
-    try {
-      // Usamos Base64 decoding para el cursor para recuperar el objeto LastEvaluatedKey complejo.
-      const ExclusiveStartKey = cursor ? JSON.parse(Buffer.from(cursor, 'base64').toString('utf8')) : undefined;
+  try {
+    // 1. Decodificar el cursor (igual que antes)
+    const ExclusiveStartKey = cursor ? JSON.parse(Buffer.from(cursor, 'base64').toString('utf8')) : undefined;
 
-      // CAMBIO: Usamos ScanCommandInput. KeyConditionExpression no es requerida para Scan.
-      const command: QueryCommandInput = {
-        TableName: process.env.COMMENTS_TABLE_NAME!,
-        Limit: take,
-        ExclusiveStartKey: ExclusiveStartKey,
-        ScanIndexForward: false,
-      }
-
-      console.log('Scan Command:', command)
-
-      // CAMBIO: Ejecutar ScanCommand
-      const result = await this.dynamoClient.send(new QueryCommand(command))
-
-      if (!result.Items) {
-        return { comments: [] }
-      }
-
-      const comments = result.Items.map(item => CommentPersistanceMapper.toDomain(item as any))
+    // 2. Configurar el QUERY (No Scan)
+    const command: QueryCommandInput = {
+      TableName: process.env.COMMENTS_TABLE_NAME!,
       
-      let nextCursor: string | undefined;
-      if (result.LastEvaluatedKey) {
-        // Codificar el objeto LastEvaluatedKey a una cadena Base64 para el siguiente cursor
-        nextCursor = Buffer.from(JSON.stringify(result.LastEvaluatedKey)).toString('base64');
-      }
+      // A. Especificar el Índice Global que creamos en serverless.yml
+      IndexName: 'CommentsByDateIndex', 
+      
+      // B. La condición: "Dame todos los items donde type sea igual a COMMENT"
+      KeyConditionExpression: '#type = :typeVal',
+      
+      // C. Definir los valores de la condición
+      ExpressionAttributeNames: {
+        '#type': 'type' // Usamos alias porque 'type' es palabra reservada en DynamoDB
+      },
+      ExpressionAttributeValues: {
+        ':typeVal': { S: 'COMMENT' }
+      },
 
-      // IMPORTANTE: Un Scan recorre toda la tabla, por lo que puede ser lento.
-      return { comments, nextCursor: nextCursor }
-    } catch (error) {
-      const err = error as Error
-      throw new InfrastructureError(`Error fetching comments from DynamoDB: ${err.message}`, 500)
+      // D. Ordenamiento: false = Descendente (Más nuevo -> Más viejo)
+      ScanIndexForward: false,
+      
+      Limit: take,
+      ExclusiveStartKey: ExclusiveStartKey,
     }
+
+    console.log('Query Command:', command)
+
+    // 3. Ejecutar (QueryCommand)
+    const result = await this.dynamoClient.send(new QueryCommand(command))
+
+    if (!result.Items) {
+      return { comments: [] }
+    }
+
+    // 4. Mapeo (igual que antes)
+    const comments = result.Items.map(item => CommentPersistanceMapper.toDomain(item as any))
+    
+    // 5. Generar siguiente cursor
+    let nextCursor: string | undefined;
+    if (result.LastEvaluatedKey) {
+      nextCursor = Buffer.from(JSON.stringify(result.LastEvaluatedKey)).toString('base64');
+    }
+
+    return { comments, nextCursor: nextCursor }
+  } catch (error) {
+    const err = error as Error
+    throw new InfrastructureError(`Error fetching comments from DynamoDB: ${err.message}`, 500)
   }
+}
 }
