@@ -5,7 +5,7 @@ import { DynamoClient } from '@shared/libraries/dynamodb/DynamoClient'
 import { Comment } from '../../domain/Comment'
 // FIX: Usamos ScanCommand para la funcionalidad de escaneo de toda la tabla
 import { PutCommand, QueryCommandInput } from '@aws-sdk/lib-dynamodb' 
-import { QueryCommand } from '@aws-sdk/client-dynamodb'
+import { QueryCommand } from '@aws-sdk/lib-dynamodb'
 // REMOVIDO: Se eliminan las importaciones de QueryCommand al cambiar a Scan
 
 export class CommentDynamoRepository implements CommentPersistanceRepository {
