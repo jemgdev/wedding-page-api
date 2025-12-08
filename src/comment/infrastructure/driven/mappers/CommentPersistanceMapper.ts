@@ -3,6 +3,7 @@ import { ICommentPersistance } from '@comment/infrastructure/driven/dtos/ICommen
 
 export class CommentPersistanceMapper {
   static toDomain (raw: ICommentPersistance): Comment {
+    console.log('Mapping raw persistence object to domain Comment:', raw);
     return Comment.fromPrimitives({
       id: raw.id,
       name: raw.name,
