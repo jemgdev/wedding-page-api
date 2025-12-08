@@ -4,7 +4,8 @@ import { CommentPersistanceMapper } from './mappers/CommentPersistanceMapper'
 import { DynamoClient } from '@shared/libraries/dynamodb/DynamoClient'
 import { Comment } from '../../domain/Comment'
 // FIX: Usamos ScanCommand para la funcionalidad de escaneo de toda la tabla
-import { PutCommand, QueryCommandInput, ScanCommand } from '@aws-sdk/lib-dynamodb' 
+import { PutCommand, QueryCommandInput } from '@aws-sdk/lib-dynamodb' 
+import { QueryCommand } from '@aws-sdk/client-dynamodb'
 // REMOVIDO: Se eliminan las importaciones de QueryCommand al cambiar a Scan
 
 export class CommentDynamoRepository implements CommentPersistanceRepository {
@@ -45,7 +46,7 @@ export class CommentDynamoRepository implements CommentPersistanceRepository {
       console.log('Scan Command:', command)
 
       // CAMBIO: Ejecutar ScanCommand
-      const result = await this.dynamoClient.send(new ScanCommand(command))
+      const result = await this.dynamoClient.send(new QueryCommand(command))
 
       if (!result.Items) {
         return { comments: [] }
