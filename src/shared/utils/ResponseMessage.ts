@@ -21,7 +21,11 @@ export function responseMessage<T> ({
     statusCode,
     body: typeof body !== 'undefined' ? JSON.stringify(body) : undefined,
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      "Access-Control-Allow-Origin": "*",
+      'Access-Control-Allow-Headers': 'Content-Type,Id-Token',
+      'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+      "Access-Control-Allow-Credentials": "true"
     }
   }
 }

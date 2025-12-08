@@ -3,5 +3,7 @@ export const MessageDetail = {
   BAD_REQUEST: 'Bad request',
   UNCONTROLLER_ERROR: 'Uncontroller error',
   SERVICE_UNAVAILABLE: 'Service unavailable',
-  PROCESS_ERROR: 'Process error'
+  PROCESS_ERROR: 'Process error',
+  UNAUTHORIZED: 'Unauthorized',
+  CONFIRMATION_SEND: 'Confirmation has been sent successfully',
 }

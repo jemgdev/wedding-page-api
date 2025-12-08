@@ -15,16 +15,16 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "paths": {
-      // user
-      "@user/*": ["user/*"],
-      "@user/domain/*": ["user/domain/*"],
-      "@user/value-objects/*": ["user/domain/value-objects/*"],
-      "@user/application/*": ["user/application/*"],
-      "@user/usecases/*": ["user/application/usecases/*"],
-      "@user/ports/*": ["user/application/ports/*"],
-      "@user/infrastructure/*": ["user/infrastructure/*"],
-      "@user/driven/*": ["user/infrastructure/driven/*"],
-      "@user/driving/*": ["user/infrastructure/driving/*"],
+      // comment
+      "@comment/*": ["comment/*"],
+      "@comment/domain/*": ["comment/domain/*"],
+      "@comment/value-objects/*": ["comment/domain/value-objects/*"],
+      "@comment/application/*": ["comment/application/*"],
+      "@comment/usecases/*": ["comment/application/usecases/*"],
+      "@comment/ports/*": ["comment/application/ports/*"],
+      "@comment/infrastructure/*": ["comment/infrastructure/*"],
+      "@comment/driven/*": ["comment/infrastructure/driven/*"],
+      "@comment/driving/*": ["comment/infrastructure/driving/*"],
 
       // shared
       "@shared/*": ["shared/*"]

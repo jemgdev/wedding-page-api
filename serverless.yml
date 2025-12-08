@@ -1,4 +1,4 @@
-service: serverless-typescript-template
+service: wedding-page-api
 frameworkVersion: "4"
 
 provider:
@@ -9,31 +9,20 @@ provider:
     STAGE: ${opt:stage}
     REGION: ${opt:region}
 
-package:
-  individually: true
-  patterns:
-    - dist/**
-    - node_modules/**
-    - package.json
-    - '!.github/**'
-    - '!src/**'
-    - '!test/**'
-    - '!.git/**'
-    - '!*.md'
-    - '!.vscode/**'
-    - '!tsconfig.json'
-    - '!jest.config.js'
-    - '!LICENSE'
-
-plugins:
-  - serverless-offline
+custom:
+  build:
+    esbuild: true
+    platform: node
+    alias:
+      '@comment': './src/comment'
+      '@shared': './src/shared'
 
 resources:
   Resources:
-    GetUsersRole:
+    GetCommentsRole:
       Type: AWS::IAM::Role
       Properties:
-        RoleName: get-users-role-${opt:stage}
+        RoleName: get-comments-role-${opt:stage}
         AssumeRolePolicyDocument:
           Version: "2012-10-17"
           Statement:
@@ -43,7 +32,66 @@ resources:
               Action:
                 - sts:AssumeRole
         Policies:
-          - PolicyName: get-users-policy
+          - PolicyName: get-comments-policy
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource: "*"
+                - Effect: Allow
+                  Action:
+                    - dynamodb:Query
+                  Resource:
+                    - !GetAtt CommentsDynamoDBTable.Arn
+                    - !Sub "${CommentsDynamoDBTable.Arn}/index/CommentsByDateIndex"
+
+    CreateCommentRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: create-comment-role-${opt:stage}
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: lambda.amazonaws.com
+              Action:
+                - sts:AssumeRole
+        Policies:
+          - PolicyName: create-comment-policy
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource: "*"
+                - Effect: Allow
+                  Action:
+                    - dynamodb:PutItem
+                  Resource:
+                    - !GetAtt CommentsDynamoDBTable.Arn
+    
+    SignInRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: sign-in-role-${opt:stage}
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: lambda.amazonaws.com
+              Action:
+                - sts:AssumeRole
+        Policies:
+          - PolicyName: sign-in-policy
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
@@ -54,24 +102,103 @@ resources:
                     - logs:PutLogEvents
                   Resource: "*"
 
+    CommentsDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: wedding-page-api-comments-table-${opt:stage}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S 
+          - AttributeName: createdAt
+            AttributeType: S
+          - AttributeName: type # <--- 1. NUEVO ATRIBUTO (La clave de agrupación)
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+          - AttributeName: createdAt
+            KeyType: RANGE
+        # 2. AGREGAMOS EL ÍNDICE
+        GlobalSecondaryIndexes:
+          - IndexName: CommentsByDateIndex # Nombre del índice
+            KeySchema:
+              - AttributeName: type # HASH (Todos los comentarios tendrán el mismo valor aquí)
+                KeyType: HASH
+              - AttributeName: createdAt # RANGE (Esto permite el ordenamiento)
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL # Copia todos los datos al índice
+        BillingMode: PAY_PER_REQUEST
+
 functions:
-  get-users:
-    handler: dist/user/infrastructure/driving/handlers/http/GetUsersHttp.handler
-    role: GetUsersRole
+  get-comments:
+    handler: src/comment/infrastructure/driving/handlers/http/GetCommentsHttp.handler
+    role: GetCommentsRole
     timeout: 29
     memorySize: 128
-    description: Get users from the database
+    description: Get comments from the database
+    environment:
+      STAGE: ${opt:stage}
+      REGION: ${opt:region}
+      COMMENTS_TABLE_NAME: wedding-page-api-comments-table-${opt:stage}
+      LOGIFLY_BASE_URL: ${param:logifly_base_url}
+      LOGIFLY_EMAIL: ${param:logifly_email}
+      LOGIFLY_PASSWORD: ${param:logifly_password}
     events:
       - http:
-          path: /api/v1/users
+          path: /api/v1/comments
           method: get
-  create-user:
-    handler: dist/user/infrastructure/driving/handlers/http/CreateUserHttp.handler
-    role: GetUsersRole
+          cors:
+            origin: '*' # ⚠️ NO uses '*' si allowCredentials es true
+            headers:
+              - Content-Type
+              - Authorization
+              - Id-Token # <--- IMPORTANTE: Tu header personalizado debe estar aquí
+            maxAge: 86400 # Cachea la respuesta OPTIONS por 1 día (opcional pero recomendado)
+
+  create-comment:
+    handler: src/comment/infrastructure/driving/handlers/http/CreateCommentHttp.handler
+    role: CreateCommentRole
     timeout: 29
     memorySize: 128
-    description: Get users from the database
+    description: Create comments in the database
+    environment:
+      STAGE: ${opt:stage}
+      REGION: ${opt:region}
+      COMMENTS_TABLE_NAME: wedding-page-api-comments-table-${opt:stage}
     events:
       - http:
-          path: /api/v1/users
+          path: /api/v1/comments
           method: post
+          cors:
+            origin: '*' # ⚠️ NO uses '*' si allowCredentials es true
+            headers:
+              - Content-Type
+              - Authorization
+              - Id-Token # <--- IMPORTANTE: Tu header personalizado debe estar aquí
+            maxAge: 86400 # Cachea la respuesta OPTIONS por 1 día (opcional pero recomendado)
+  
+  signin:
+    handler: src/comment/infrastructure/driving/handlers/http/SignInHttp.handler
+    role: SignInRole
+    timeout: 29
+    memorySize: 128
+    description: Sign in user
+    environment:
+      STAGE: ${opt:stage}
+      REGION: ${opt:region}
+      COMMENTS_TABLE_NAME: wedding-page-api-comments-table-${opt:stage}
+      LOGIFLY_BASE_URL: ${param:logifly_base_url}
+      LOGIFLY_EMAIL: ${param:logifly_email}
+      LOGIFLY_PASSWORD: ${param:logifly_password}
+    events:
+      - http:
+          path: /api/v1/signin
+          method: post
+          cors:
+            origin: '*' # ⚠️ NO uses '*' si allowCredentials es true
+            headers:
+              - Content-Type
+              - Authorization
+              - Id-Token # <--- IMPORTANTE: Tu header personalizado debe estar aquí
+            maxAge: 86400 # Cachea la respuesta OPTIONS por 1 día (opcional pero recomendado)
