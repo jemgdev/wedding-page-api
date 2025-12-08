@@ -24,7 +24,8 @@ export function responseMessage<T> ({
       'Content-Type': 'application/json',
       "Access-Control-Allow-Origin": "*",
       'Access-Control-Allow-Headers': 'Content-Type,id-token',
-      'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS'
+      'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+      "Access-Control-Allow-Credentials": "true"
     }
   }
 }
